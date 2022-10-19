@@ -6,9 +6,18 @@ All notable changes to this project will be documented in this file. The format 
 
 > **Note**: Changes and additions listed here are contained in the `:edge` image tag. These changes may not be as stable as released changes.
 
+### Added
+
+- **scripts**: fail2ban - enable network bans ([#2818](https://github.com/docker-mailserver/docker-mailserver/pull/2818))
+
+### Changed
+
+- **build** cleaned up `Makefile` and its targets ([#2833](https://github.com/docker-mailserver/docker-mailserver/pull/2833))
+
 ### Fixed
 
 - **scripts**: Run `user-patches.sh` right before starting daemons ([#2817](https://github.com/docker-mailserver/docker-mailserver/pull/2817))
+- **scripts**: Run Amavis cron job only when Amavis is enabled ([#2831](https://github.com/docker-mailserver/docker-mailserver/pull/2831))
 
 ## [11.2.0](https://github.com/docker-mailserver/docker-mailserver/releases/tag/v11.2.0)
 

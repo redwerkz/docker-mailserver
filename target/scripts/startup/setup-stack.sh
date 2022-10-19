@@ -1,4 +1,4 @@
-#! /bin/bash
+#!/bin/bash
 
 function _setup
 {
@@ -79,6 +79,11 @@ function _setup_amavis
   else
     _log 'debug' "Removing Amavis from Postfix's configuration"
     sed -i 's|content_filter =.*|content_filter =|' /etc/postfix/main.cf
+
+    _log 'debug' 'Disabling Amavis cron job'
+    mv /etc/cron.d/amavisd-new /etc/cron.d/amavisd-new.disabled
+    chmod 0 /etc/cron.d/amavisd-new.disabled
+
     [[ ${ENABLE_CLAMAV} -eq 1 ]] && _log 'warn' 'ClamAV will not work when Amavis is disabled. Remove ENABLE_AMAVIS=0 from your configuration to fix it.'
     [[ ${ENABLE_SPAMASSASSIN} -eq 1 ]] && _log 'warn' 'Spamassassin will not work when Amavis is disabled. Remove ENABLE_AMAVIS=0 from your configuration to fix it.'
   fi
@@ -863,7 +868,7 @@ function _setup_security_stack
       sa-update --import /etc/spamassassin/kam/kam.sa-channels.mcgrail.com.key
 
       cat >"${SPAMASSASSIN_KAM_CRON_FILE}" <<"EOM"
-#! /bin/bash
+#!/bin/bash
 
 RESULT=$(sa-update --gpgkey 24C063D8 --channel kam.sa-channels.mcgrail.com 2>&1)
 EXIT_CODE=${?}
@@ -977,7 +982,7 @@ function _setup_mail_summary
       _log 'trace' 'Creating daily cron job for pflogsumm report'
 
       cat >/etc/cron.daily/postfix-summary << EOM
-#! /bin/bash
+#!/bin/bash
 
 /usr/local/bin/report-pflogsumm-yesterday ${HOSTNAME} ${PFLOGSUMM_RECIPIENT} ${PFLOGSUMM_SENDER}
 EOM
@@ -1025,7 +1030,7 @@ function _setup_logwatch
       fi
 
       cat >"${LOGWATCH_FILE}" << EOM
-#! /bin/bash
+#!/bin/bash
 
 /usr/sbin/logwatch ${INTERVAL} --hostname ${HOSTNAME} --mailto ${LOGWATCH_RECIPIENT}
 EOM
